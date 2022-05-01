@@ -119,14 +119,17 @@ resource "aws_route_table_association" "private" {
 
 # OUTPUTS
 output "id" {
+  description = "ID of project VPC"
   value = aws_vpc.main.id
 }
 
 output "public_subnets" {
+  description = "public subnets"
   value = aws_subnet.public
 }
 
 output "private_subnets" {
+  description = "private subnets"
   value = aws_subnet.private
 }
 

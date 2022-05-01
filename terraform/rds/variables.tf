@@ -7,9 +7,12 @@ variable "postgresql_instance_class" {
   default     = "db.t3.medium"
 }
 
-variable "application-secrets" {
-  description = "A map of secrets that is passed into the application. Formatted like ENV_VAR = VALUE"
-  type        = map
+variable "db-key" {
+  description = "DB key"
+}
+
+variable "db-secret" {
+  description = "DB secret"
 }
 
 variable "availability_zones" {

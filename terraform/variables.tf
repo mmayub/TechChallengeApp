@@ -21,10 +21,18 @@ variable "aws-secret-key" {
   type = string
 }
 
-variable "application-secrets" {
-  description = "A map of secrets that is passed into the application. Formatted like ENV_VAR = VALUE"
-  type        = map
+variable "db-key" {
+  type = string
 }
+
+variable "db-secret" {
+  type = string
+}
+
+# variable "application-secrets" {
+#   description = "A map of secrets that is passed into the application. Formatted like ENV_VAR = VALUE"
+#   type        = map
+# }
 
 variable "availability_zones" {
   description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"

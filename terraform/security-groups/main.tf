@@ -88,7 +88,12 @@ resource "aws_security_group" "db" {
   }
 
   tags = {
-    Name = "${var.prefix}-db"
+    Name = "${var.name}-db-${var.environment}"
   }
 }
 
+
+output "alb" {
+  description = "ID for ALB security group"
+  value = aws_security_group.alb.id
+}

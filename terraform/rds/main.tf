@@ -4,8 +4,10 @@ resource "aws_rds_cluster" "postgres" {
   engine_mode            = "provisioned"
   engine_version         = var.postgresql_version
   availability_zones     = var.availability_zones
-  master_username        = lookup(var.application_secrets, "DB_KEY", "default")
-  master_password        = lookup(var.application_secrets, "DB_SECRET", "default")
+  # master_username        = values(var.application-secrets)[0]
+  # master_password        = values(var.application-secrets)[1]
+  master_username        = var.db-key
+  master_password        = var.db-secret
   database_name          = "app"
   vpc_security_group_ids = [aws_security_group.db.id]
   deletion_protection    = var.environment == "prod" ? true : false
