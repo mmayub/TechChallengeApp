@@ -9,12 +9,6 @@ variable "environment" {
 
 variable "aws-region" {
   type        = string
-  description = "AWS region to launch servers."
-  default     = "ap-southeast-2"
-}
-
-variable "aws-region" {
-  type        = string
   description = "AWS region where infrasturcture is launched"
   default     = "ap-souteast-2"
 }
@@ -71,7 +65,7 @@ variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
   default     = 2048
 }
-variable "container_memory" {
+variable "container_image" {
   description = "Application container image"
   default     = "servian/techchallengeapp:latest"
 }
