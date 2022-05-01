@@ -9,6 +9,12 @@ variable "environment" {
 
 variable "aws-region" {
   type        = string
+  description = "AWS region to launch servers."
+  default     = "ap-southeast-2"
+}
+
+variable "aws-region" {
+  type        = string
   description = "AWS region where infrasturcture is launched"
   default     = "ap-souteast-2"
 }
@@ -53,14 +59,17 @@ variable "container_port" {
 
 variable "container_cpu" {
   description = "The number of cpu units used by the task"
-  default     = 256
+  default     = 1024
 }
 
 variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
-  default     = 512
+  default     = 2048
 }
-
+variable "container_memory" {
+  description = "Application container image"
+  default     = "servian/techchallengeapp:latest"
+}
 variable "health_check_path" {
   description = "Http path for task health check"
   default     = "/healthcheck"
