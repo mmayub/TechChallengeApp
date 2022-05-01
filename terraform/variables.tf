@@ -4,90 +4,76 @@ variable "name" {
 
 variable "environment" {
   description = "name of environment, e.g. \"prod\""
-  default     = "npe"
 }
 
 variable "aws-region" {
   type        = string
   description = "AWS region where infrasturcture is launched"
-  default     = "ap-souteast-2"
 }
 
 variable "aws-access-key" {
   type = string
+  sensitive = true
 }
 
 variable "aws-secret-key" {
   type = string
+  sensitive = true
 }
 
 variable "db-key" {
   type = string
+  sensitive = true
 }
 
 variable "db-secret" {
   type = string
+  sensitive = true
 }
 
-# variable "application-secrets" {
-#   description = "A map of secrets that is passed into the application. Formatted like ENV_VAR = VALUE"
-#   type        = map
-# }
-
 variable "availability_zones" {
-  description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"
-  default     = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
+  description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"  
 }
 
 variable "cidr" {
   description = "The CIDR block for the VPC."
-  default     = "10.0.0.0/16"
 }
 
 variable "private_subnets" {
-  description = "a list of CIDRs for private subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones"
-  default     = ["10.0.0.0/20", "10.0.32.0/20", "10.0.64.0/20"]
+  description = "a list of CIDRs for private subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones" 
 }
 
 variable "public_subnets" {
-  description = "a list of CIDRs for public subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones"
-  default     = ["10.0.16.0/20", "10.0.48.0/20", "10.0.80.0/20"]
+  description = "a list of CIDRs for public subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones" 
 }
 
 variable "service_desired_count" {
   description = "Number of tasks running in parallel"
-  default     = 2
 }
 
 variable "container_port" {
   description = "The port where the Docker is exposed"
-  default     = 3000
 }
 
 variable "container_cpu" {
   description = "The number of cpu units used by the task"
-  default     = 1024
 }
 
 variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
-  default     = 2048
 }
 variable "container_image" {
   description = "Application container image"
-  default     = "servian/techchallengeapp:latest"
+
 }
 variable "health_check_path" {
   description = "Http path for task health check"
-  default     = "/healthcheck"
 }
 
 variable "certificate_arn" {
   description = "Regional certificate ARN to be used by the load balancer"
-  default     = ""
 }
 
 variable "postgresql_version" {
   description = "PostgreSQL version to be used"
-  default     = "10.11"
 }

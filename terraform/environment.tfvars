@@ -1,1 +1,15 @@
-name="techChallengeServian"
+name                    = "techChallengeServian"
+environment             = "npe"
+aws-region              = "ap-souteast-2"
+availability_zones      = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
+cidr                    = "10.0.0.0/16"
+public_subnets          = ["10.0.16.0/20", "10.0.48.0/20", "10.0.80.0/20"]
+private_subnets         = ["10.0.0.0/20", "10.0.32.0/20", "10.0.64.0/20"]
+service_desired_count   = 2
+container_port          = 3000
+container_cpu           = 1024
+container_memory        = 2048
+container_image         = "servian/techchallengeapp:latest"
+healthhealth_check_path = "/healthcheck"
+certificate_arn         = ""
+postgresql_version      = "10.11"
