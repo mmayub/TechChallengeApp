@@ -10,6 +10,10 @@ variable "cidr" {
   description = "The CIDR block for the VPC."
 }
 
+variable "az_count" {
+  description = "Number of AZs to cover in a given region"
+}
+
 variable "public_subnets" {
   description = "List of public subnets"
 }
