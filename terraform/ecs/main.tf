@@ -76,6 +76,17 @@ resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment-for-s
   policy_arn = aws_iam_policy.secrets.arn
 }
 
+# cloudwathc log group
+resource "aws_cloudwatch_log_group" "main" {
+  name = "/ecs/${var.name}-task-${var.environment}"
+
+  tags = {
+    Name        = "${var.name}-task-${var.environment}"
+    Environment = var.environment
+  }
+}
+
+
 # creating ECS cluster
 resource "aws_ecs_cluster" "main" {
   name = "${var.name}-cluster-${var.environment}"
