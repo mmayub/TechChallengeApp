@@ -1,4 +1,4 @@
-data "aws_availability_zone" "main" {}
+data "aws_availability_zones" "available" {}
 
 # ading VPC with IGW attached
 resource "aws_vpc" "main" {
@@ -26,7 +26,7 @@ resource "aws_subnet" "private" {
   count             = var.az_count
   vpc_id            = aws_vpc.main.id
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
-  availability_zone = data.aws_availability_zone.available.names[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name        = "${var.name}-private-subnet-${var.environment}-${format("%03d", count.index+1)}"
@@ -39,7 +39,7 @@ resource "aws_subnet" "public" {
   count             = var.az_count
   vpc_id            = aws_vpc.main.id
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, var.az_count + count.index)
-  availability_zone = data.aws_availability_zone.available.names[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {

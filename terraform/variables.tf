@@ -87,6 +87,10 @@ variable "certificate_arn" {
   description = "Regional certificate ARN to be used by the load balancer"
 }
 
+variable "service_desired_count" {
+  description = "Number of services running in parallel"
+}
+
 # variable "postgresql_version" {
 #   description = "PostgreSQL version to be used"
 # }
