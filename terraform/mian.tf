@@ -7,14 +7,15 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "terraform"
+    bucket = "malik-terraform-backend"
     key = "terraform.tfstate"
-    region = var.aws_region
+    region = "ap-southeast-2"
   }
 }
 
 provider "aws" {
+  profile = "default"
+  region = "ap-southeast-2"
   access_key = var.aws-access-key
-  secret_key = var.aws-secret-key
-  region = var.aws-region
+  secret_key = var.aws-secret-key 
 }
