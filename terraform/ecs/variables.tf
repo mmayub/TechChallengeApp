@@ -38,9 +38,9 @@ variable "aws_alb_target_group_arn" {
   description = "ARN of the alb target group"
 }
 
-variable "aws_ecr_repository_url" {
-  description = "URL to ECR where app image is stored"
-}
+# variable "aws_ecr_repository_url" {
+#   description = "URL to ECR where app image is stored"
+# }
 
 variable "service_desired_count" {
   description = "Number of services running in parallel"
