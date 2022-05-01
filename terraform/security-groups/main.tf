@@ -8,14 +8,7 @@ resource "aws_security_group" "alb" {
     to_port          = 80
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
-  }
-
-  ingress {
-    protocol         = "tcp"
-    from_port        = 443
-    to_port          = 443
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    description     = "Access to port 80 for users of application"
   }
 
   egress {
@@ -43,6 +36,8 @@ resource "aws_security_group" "ecs_tasks" {
     to_port          = var.container_port
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
+    security_groups  = [aws_security_group.alb.id]
+    description     = "Access to port 3000 for load balancer"
   }
 
   egress {
@@ -65,15 +60,14 @@ resource "aws_security_group" "ecs_tasks" {
 
 resource "aws_security_group" "db" {
   name        = "${var.name}-db-${var.environment}"
-  description     = "Access to port 5432 for application server"
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "port 5432 postgres"
     from_port        = 5432
     to_port          = 5432
     protocol         = "tcp"
     security_groups  = [aws_security_group.ecs_tasks.id]
+    description     = "Access to port 5432 for application server"
   }
   
   egress {
@@ -96,4 +90,14 @@ resource "aws_security_group" "db" {
 output "alb" {
   description = "ID for ALB security group"
   value = aws_security_group.alb.id
+}
+
+output "ecs_tasks" {
+  description = "ID for ecs_tasks security group"
+  value = aws_security_group.ecs_tasks.id
+}
+
+output "db" {
+  description = "ID for db security group"
+  value = aws_security_group.ecs_tasks.id
 }
