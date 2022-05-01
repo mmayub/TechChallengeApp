@@ -27,6 +27,11 @@ variable "aws-secret-key" {
   type = string
 }
 
+variable "application-secrets" {
+  description = "A map of secrets that is passed into the application. Formatted like ENV_VAR = VALUE"
+  type        = map
+}
+
 variable "availability_zones" {
   description = "a comma-separated list of availability zones, defaults to all AZ of the region, if set to something other than the defaults, both private_subnets and public_subnets have to be defined as well"
   default     = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
@@ -73,4 +78,14 @@ variable "container_memory" {
 variable "health_check_path" {
   description = "Http path for task health check"
   default     = "/healthcheck"
+}
+
+variable "certificate_arn" {
+  description = "Regional certificate ARN to be used by the load balancer"
+  default     = ""
+}
+
+variable "postgresql_version" {
+  description = "PostgreSQL version to be used"
+  default     = "10.11"
 }
