@@ -78,7 +78,22 @@ resource "aws_ecs_task_definition" "main" {
             awslogs-stream-prefix = "ecs"
             awslogs-region        = var.region
           }
-        }
+        },
+        command = ["server"],
+        # environment = [
+        #   {
+        #   name  = "VTT_DBHOST"
+        #   value = var.rds_endpoint
+        #   },
+        #   {
+        #     name  = "VTT_DBPASSWORD"
+        #     value = var.master_password
+        #   },
+        #   {
+        #     name  = "VTT_LISTENHOST"
+        #     value = "0.0.0.0"
+        #   }
+        # ]
       }
     ]
   )

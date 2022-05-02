@@ -51,6 +51,10 @@ variable "container_environment" {
   type        = list
 }
 
+variable "rds_endpoint" {
+  description = "endpoint of rds cluster"
+}
+
 # variable "container_secrets" {
 #   description = "The container secret environmnent variables"
 #   type        = list

@@ -83,19 +83,21 @@ module "ecs" {
     }
   ]
   aws_ecr_repository_url = module.ecr.aws_ecr_repository_url
+  rds_endpoint              = module.rds.rds_endpoint
 }
 
-# module "rds" {
-#   source                    = "./rds"
-#   name                      = var.name
-#   environment               = var.environment
-#   # postgresql_version        = var.postgresql_version
-#   master_username           = var.master_username
-#   master_password           = var.master_password
-#   availability_zones        = var.availability_zones
-#   db_security_groups        = [module.security_groups.db]
-#   postgresql_instance_class = var.postgresql_instance_class
-# }
+module "rds" {
+  source                    = "./rds"
+  name                      = var.name
+  environment               = var.environment
+  # postgresql_version        = var.postgresql_version
+  master_username           = var.master_username
+  master_password           = var.master_password
+  availability_zones        = var.availability_zones
+  db_security_groups        = [module.security_groups.db]
+  postgresql_instance_class = var.postgresql_instance_class
+  private_subnets           = var.private_subnets
+}
 
 
 

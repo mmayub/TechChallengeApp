@@ -29,3 +29,7 @@ variable "availability_zones" {
 variable "db_security_groups" {
   description = "ID for db security groups"
 }
+
+variable "private_subnets" {
+  description = "List of private subnets"
+}
