@@ -26,6 +26,21 @@ resource "aws_ecr_lifecycle_policy" "main" {
   })
 }
 
+data "aws_caller_identity" "current" {}
+
+variable "source_path" {
+  description = "source path for terraform"
+  default     = "./"
+}
+
+# to push latest docker image into ECR
+resource "null_resource" "push" {
+  provisioner "local-exec" {
+     command     = "./${coalesce("push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.main.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
+     interpreter = ["bash", "-c"]
+  }
+}
+
 output "aws_ecr_repository_url" {
     value = aws_ecr_repository.main.repository_url
 }

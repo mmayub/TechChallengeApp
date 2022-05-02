@@ -56,8 +56,8 @@ resource "aws_ecs_task_definition" "main" {
     [
       {
         name        = "${var.name}-container-${var.environment}"
-        image       = var.container_image
-        # image       = var.aws_ecr_repository_url
+        # image       = var.container_image
+        image       = var.aws_ecr_repository_url
         cpu         = var.container_cpu
         memory      = var.container_memory
         network_mode             = "awsvpc"
@@ -265,6 +265,5 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
 #     scale_out_cooldown = 300
 #   }
 # }
-
 
 

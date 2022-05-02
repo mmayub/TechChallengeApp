@@ -5,3 +5,8 @@ variable "name" {
 variable "environment" {
   description = "the name of your environment, e.g. \"prod\""
 }
+
+variable "tag" {
+  description = "tag to use for our new docker image"
+  default     = "latest"
+}

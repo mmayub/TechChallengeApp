@@ -75,10 +75,10 @@ variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
 }
 
-variable "container_image" {
-  description = "Application container image"
+# variable "container_image" {
+#   description = "Application container image"
+# }
 
-}
 variable "health_check_path" {
   description = "Http path for task health check"
 }
@@ -99,6 +99,9 @@ variable "postgresql_instance_class" {
   description = "PostgreSQL instance class to be used"
 }
 
+variable "tag" {
+  description = "tag to use for our new docker image"
+}
 
 # variable "domain_name" {
 #   description = "The domain name to access"

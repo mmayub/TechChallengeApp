@@ -52,6 +52,12 @@ module "alb" {
   # domain_name         = var.domain_name
 }
 
+module "ecr" {
+  source      = "./ecr"
+  name        = var.name
+  tag         = var.tag
+  environment = var.environment
+}
 
 module "ecs" {
   source                      = "./ecs"
@@ -62,7 +68,7 @@ module "ecs" {
   aws_alb_target_group_arn    = module.alb.aws_alb_target_group_arn
   ecs_service_security_groups = [module.security_groups.ecs_tasks]
   container_port              = var.container_port
-  container_image             = var.container_image
+  # container_image             = var.container_image
   container_cpu               = var.container_cpu
   container_memory            = var.container_memory
   service_desired_count       = var.service_desired_count
@@ -76,28 +82,22 @@ module "ecs" {
       value = var.container_port 
     }
   ]
-  # aws_ecr_repository_url = module.ecr.aws_ecr_repository_url
+  aws_ecr_repository_url = module.ecr.aws_ecr_repository_url
 }
 
-module "rds" {
-  source                    = "./rds"
-  name                      = var.name
-  environment               = var.environment
-  # postgresql_version        = var.postgresql_version
-  master_username           = var.master_username
-  master_password           = var.master_password
-  availability_zones        = var.availability_zones
-  db_security_groups        = [module.security_groups.db]
-  postgresql_instance_class = var.postgresql_instance_class
-}
-
-
-
-# module "ecr" {
-#   source      = "./ecr"
-#   name        = var.name
-#   environment = var.environment
+# module "rds" {
+#   source                    = "./rds"
+#   name                      = var.name
+#   environment               = var.environment
+#   # postgresql_version        = var.postgresql_version
+#   master_username           = var.master_username
+#   master_password           = var.master_password
+#   availability_zones        = var.availability_zones
+#   db_security_groups        = [module.security_groups.db]
+#   postgresql_instance_class = var.postgresql_instance_class
 # }
+
+
 
 
 
