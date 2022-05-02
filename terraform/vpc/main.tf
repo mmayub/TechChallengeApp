@@ -23,10 +23,10 @@ resource "aws_internet_gateway" "main" {
 
 # add private subnets
 resource "aws_subnet" "private" {
-  count             = var.az_count
   vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = element(var.private_subnets, count.index)
+  availability_zone = element(var.availability_zones, count.index)
+  count             = length(var.private_subnets)
 
   tags = {
     Name        = "${var.name}-private-subnet-${var.environment}-${format("%03d", count.index+1)}"
@@ -36,11 +36,12 @@ resource "aws_subnet" "private" {
 
 # add public subnets
 resource "aws_subnet" "public" {
-  count             = var.az_count
   vpc_id            = aws_vpc.main.id
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, var.az_count + count.index)
-  availability_zone = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = true
+  cidr_block        = element(var.public_subnets, count.index)
+  count             = length(var.private_subnets)
+  # availability_zone = data.aws_availability_zones.available.names[count.index]
+  availability_zone = element(var.availability_zones, count.index)
+  # map_public_ip_on_launch = true
 
   tags = {
     Name        = "${var.name}-public-subnet-${var.environment}-${format("%03d", count.index+1)}"
@@ -72,7 +73,7 @@ resource "aws_route_table_association" "public" {
 
 # elastic IP for NAT
 resource "aws_eip" "nat" {
-  count = var.az_count
+  count = length(var.private_subnets)
   vpc = true
   depends_on = [aws_internet_gateway.main]
 
@@ -84,7 +85,7 @@ resource "aws_eip" "nat" {
 
 # NAT for private subnets
 resource "aws_nat_gateway" "main" {
-  count         = var.az_count
+  count = length(var.private_subnets)
   allocation_id = element(aws_eip.nat.*.id, count.index)
   subnet_id     = element(aws_subnet.public.*.id, count.index)
   depends_on    = [aws_internet_gateway.main]
@@ -98,7 +99,7 @@ resource "aws_nat_gateway" "main" {
 
 # routing table for private subnets
 resource "aws_route_table" "private" {
-  count  = var.az_count
+  count  = length(var.private_subnets)
   vpc_id = aws_vpc.main.id
 
   tags = {
@@ -108,18 +109,72 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route" "private" {
-  count                  = var.az_count
+  count                  = length(var.private_subnets)
   route_table_id         = element(aws_route_table.private.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.main.*.id, count.index)
 }
 
 resource "aws_route_table_association" "private" {
-  count          = var.az_count
+  count          = length(var.private_subnets)
   subnet_id      = element(aws_subnet.private.*.id, count.index)
   route_table_id = element(aws_route_table.private.*.id, count.index)
 }
 
+resource "aws_flow_log" "main" {
+  iam_role_arn    = aws_iam_role.vpc-flow-logs-role.arn
+  log_destination = aws_cloudwatch_log_group.main.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.main.id
+}
+
+resource "aws_cloudwatch_log_group" "main" {
+  name = "${var.name}-cloudwatch-log-group"
+}
+
+resource "aws_iam_role" "vpc-flow-logs-role" {
+  name = "${var.name}-vpc-flow-logs-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "vpc-flow-logs.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "vpc-flow-logs-policy" {
+  name = "${var.name}-vpc-flow-logs-policy"
+  role = aws_iam_role.vpc-flow-logs-role.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
 
 # OUTPUTS
 output "id" {
