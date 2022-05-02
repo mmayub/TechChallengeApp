@@ -30,7 +30,7 @@ data "aws_caller_identity" "current" {}
 
 variable "source_path" {
   description = "source path for terraform"
-  default     = "./"
+  default     = "../"
 }
 
 # to push latest docker image into ECR
