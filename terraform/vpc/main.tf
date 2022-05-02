@@ -1,4 +1,4 @@
-data "aws_availability_zones" "available" {}
+# data "aws_availability_zones" "available" {}
 
 # ading VPC with IGW attached
 resource "aws_vpc" "main" {
@@ -31,6 +31,17 @@ resource "aws_subnet" "private" {
   tags = {
     Name        = "${var.name}-private-subnet-${var.environment}-${format("%03d", count.index+1)}"
     Environment = var.environment
+  }
+}
+
+# db subnet group
+resource "aws_db_subnet_group" "db-subnet-group" {
+  name       = "techchallangeapp-rds-subnet-group"
+  subnet_ids = data.aws_subnets.available.ids
+  description = "techchallangeapp rds subnet group"
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -176,8 +187,16 @@ resource "aws_iam_role_policy" "vpc-flow-logs-policy" {
 EOF
 }
 
+data "aws_subnets" "available" {
+  filter {
+    name   = "tag:Name"
+    values = ["*private-subnet*"] # insert values here
+  }
+
+}
+
 # OUTPUTS
-output "id" {
+output "vpc_id" {
   description = "ID of project VPC"
   value = aws_vpc.main.id
 }
@@ -190,6 +209,11 @@ output "public_subnets" {
 output "private_subnets" {
   description = "private subnets"
   value = aws_subnet.private
+}
+
+output "db_subnet_group_name" {
+  description = "db subnet group id"
+  value = aws_db_subnet_group.db-subnet-group.id
 }
 
 

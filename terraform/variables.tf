@@ -29,9 +29,9 @@ variable "aws-secret-key" {
   sensitive = true
 }
 
-variable "az_count" {
-  description = "Number of AZs to cover in a given region"
-}
+# variable "az_count" {
+#   description = "Number of AZs to cover in a given region"
+# }
 
 variable "master_username" {
   type = string

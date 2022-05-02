@@ -10,9 +10,9 @@ variable "environment" {
 #   description = "PostgreSQL version to be used"
 # }
 
-variable "postgresql_instance_class" {
-  description = "PostgreSQL database instance class"
-}
+# variable "postgresql_instance_class" {
+#   description = "PostgreSQL database instance class"
+# }
 
 variable "master_username" {
   description = "master username"
@@ -30,6 +30,11 @@ variable "db_security_groups" {
   description = "ID for db security groups"
 }
 
-variable "private_subnets" {
-  description = "List of private subnets"
+variable "db_subnet_group_name" {
+  description = "db subnet group id"
 }
+
+# variable "private_subnets" {
+#   description = "List of private subnets"
+#   type = list
+# }

@@ -1,11 +1,10 @@
 name                        = "techChallengeServian"
 environment                 = "prod"
 aws-region                  = "ap-souteast-2"
-az_count                    = "2"
 availability_zones          = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
-cidr                        = "172.17.0.0/16"
-public_subnets              = ["10.0.16.0/20", "10.0.48.0/20", "10.0.80.0/20"]
-private_subnets             = ["10.0.0.0/20", "10.0.32.0/20", "10.0.64.0/20"]
+cidr                        = "10.10.0.0/16"
+public_subnets              = ["10.10.11.0/24", "10.10.12.0/24", "10.10.13.0/24"]
+private_subnets             = ["10.10.1.0/24", "10.10.2.0/24", "10.10.3.0/24"]
 service_desired_count       = 3
 container_port              = 3000
 container_cpu               = 1024

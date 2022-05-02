@@ -1,17 +1,7 @@
-# ### RDS ###
-# resource "aws_db_subnet_group" "db-subnet-group" {
-#   name = "${var.name}-${var.environment}-db-subnet-group"
-#   description = "${var.name}-${var.environment} DB Subnet group"
-#   subnet_ids = ["${var.private_subnets.*.id}"]
-#   # tags {
-#   #   Name = "${var.name}-${var.environment}-db-subnet-group"
-#   #   Environment = "${var.environment}"
-#   # }
-# }
-
+### RDS ###
 # resource "aws_rds_cluster" "postgres" {
 #   cluster_identifier     = "techchallengeservian-db-${var.environment}"
-#   db_subnet_group_name   = aws_db_subnet_group.db-subnet-group.id
+#   db_subnet_group_name   = var.db_subnet_group_name
 #   engine                 = "aurora-postgresql"
 #   engine_mode            = "provisioned"
 #   # engine_version         = var.postgresql_version
@@ -38,34 +28,42 @@
 #   value = aws_rds_cluster.postgres.endpoint
 # }
 
-resource "aws_db_subnet_group" "db-subnet-group" {
-  name       = "techchallangeapp-rds-subnet-group"
-  subnet_ids = var.private_subnets
-  description = "techchallangeapp rds subnet group"
+# resource "aws_db_subnet_group" "db-subnet-group" {
+#   name       = "techchallangeapp-rds-subnet-group"
+#   subnet_ids = data.aws_subnets.available.ids
+#   description = "techchallangeapp rds subnet group"
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+
 
 resource "aws_db_instance" "rds" {
   identifier                = "techchallengeservian-db-${var.environment}"
   allocated_storage         = 20
   max_allocated_storage     = 40
-  storage_type              = "gp2"
+  # storage_type              = "gp2"
   engine                    = "postgres"
-  engine_version            = "12.5"
-  instance_class            = "db.t2.micro"
+  engine_version            = "13.3"
+  instance_class            = "db.t3.small"
   username                  = "postgres"
-  password                  = "letmein123"
+  password                  = "sEcure123"
   port                      = 5432
   publicly_accessible       = false
-  availability_zone         = "ap-southeast-2a"
+  # availability_zone         = "ap-southeast-2a"
+  # availability_zone        = element(var.availability_zones[count.index], count.index)
   vpc_security_group_ids    = var.db_security_groups
-  db_subnet_group_name      = aws_db_subnet_group.db-subnet-group.id
-  parameter_group_name      = "default.postgres12"
+  db_subnet_group_name      = var.db_subnet_group_name
+  parameter_group_name      = "default.postgres13"
   # multi_az set to off as it increases dpeloyment time. Set to true for higher db availability.
-  multi_az                  = false
-  deletion_protection       = false
+  multi_az                  = true
+  # deletion_protection       = false
   skip_final_snapshot       = true
 }
+
+output "db_instance_availability_zone" {
+  description = "The availability zone of the RDS instance"
+  value = aws_db_instance.rds.availability_zone
+}
+
