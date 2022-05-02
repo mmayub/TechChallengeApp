@@ -6,14 +6,6 @@ variable "environment" {
   description = "the name of your environment, e.g. \"prod\""
 }
 
-# variable "postgresql_version" {
-#   description = "PostgreSQL version to be used"
-# }
-
-# variable "postgresql_instance_class" {
-#   description = "PostgreSQL database instance class"
-# }
-
 variable "master_username" {
   description = "master username"
 }
@@ -33,8 +25,3 @@ variable "db_security_groups" {
 variable "db_subnet_group_name" {
   description = "db subnet group id"
 }
-
-# variable "private_subnets" {
-#   description = "List of private subnets"
-#   type = list
-# }

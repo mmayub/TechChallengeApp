@@ -25,39 +25,6 @@ resource "aws_security_group" "alb" {
   }
 }
 
-# security group for tasks (in ECS)
-resource "aws_security_group" "ecs_tasks" {
-  name   = "${var.name}-sg-task-${var.environment}"
-  vpc_id = var.vpc_id
-
-  ingress {
-    protocol         = "tcp"
-    from_port        = var.container_port
-    to_port          = var.container_port
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-    security_groups  = [aws_security_group.alb.id]
-    description     = "Access to port 3000 for load balancer"
-  }
-
-  egress {
-    protocol         = "-1"
-    from_port        = 0
-    to_port          = 0
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = {
-    Name        = "${var.name}-sg-task-${var.environment}"
-    Environment = var.environment
-  }
-}
-
 resource "aws_security_group" "db" {
   name        = "${var.name}-db-${var.environment}"
   vpc_id      = var.vpc_id
@@ -86,18 +53,50 @@ resource "aws_security_group" "db" {
   }
 }
 
-
 output "alb" {
   description = "ID for ALB security group"
   value = aws_security_group.alb.id
-}
-
-output "ecs_tasks" {
-  description = "ID for ecs_tasks security group"
-  value = aws_security_group.ecs_tasks.id
 }
 
 output "db" {
   description = "ID for db security group"
   value = aws_security_group.ecs_tasks.id
 }
+
+# # security group for tasks (in ECS)
+# resource "aws_security_group" "ecs_tasks" {
+#   name   = "${var.name}-sg-task-${var.environment}"
+#   vpc_id = var.vpc_id
+
+#   ingress {
+#     protocol         = "tcp"
+#     from_port        = var.container_port
+#     to_port          = var.container_port
+#     cidr_blocks      = ["0.0.0.0/0"]
+#     ipv6_cidr_blocks = ["::/0"]
+#     security_groups  = [aws_security_group.alb.id]
+#     description     = "Access to port 3000 for load balancer"
+#   }
+
+#   egress {
+#     protocol         = "-1"
+#     from_port        = 0
+#     to_port          = 0
+#     cidr_blocks      = ["0.0.0.0/0"]
+#     ipv6_cidr_blocks = ["::/0"]
+#   }
+
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+
+#   tags = {
+#     Name        = "${var.name}-sg-task-${var.environment}"
+#     Environment = var.environment
+#   }
+# }
+
+# output "ecs_tasks" {
+#   description = "ID for ecs_tasks security group"
+#   value = aws_security_group.ecs_tasks.id
+# }

@@ -18,14 +18,6 @@ variable "security_groups" {
   description = "Comma separated list of security groups"
 }
 
-# variable "certificate_arn" {
-#   description = "The ARN of the certificate that the ALB uses for https"
-# }
-
-# variable "domain_name" {
-#   description = "The domain name to access"
-# }
-
 variable "container_port" {
   description = "The port where the Docker is exposed"
 }
