@@ -11,13 +11,13 @@ variable "aws-region" {
   description = "AWS region where infrasturcture is launched"
 }
 
-variable "ecs_task_execution_role_name" {
-  description = "ECS task execution role name" 
-}
+# variable "ecs_task_execution_role_name" {
+#   description = "ECS task execution role name" 
+# }
 
-variable "ecs_auto_scale_role_name" {
-  description = "ECS auto scale role Name"
-}
+# variable "ecs_auto_scale_role_name" {
+#   description = "ECS auto scale role Name"
+# }
 
 variable "aws-access-key" {
   type = string
@@ -58,50 +58,47 @@ variable "private_subnets" {
 variable "public_subnets" {
   description = "a list of CIDRs for public subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones" 
 }
-
-variable "container_count" {
-  description = "Number of docker container to run"
+variable "app_port" {
+  description = "The port where the app is exposed"
 }
-
-variable "container_port" {
-  description = "The port where the Docker is exposed"
-}
-
-variable "container_cpu" {
-  description = "The number of cpu units used by the task"
-}
-
-variable "container_memory" {
-  description = "The amount (in MiB) of memory used by the task"
-}
-
-# variable "container_image" {
-#   description = "Application container image"
-# }
-
 variable "health_check_path" {
   description = "Http path for task health check"
-}
-
-variable "certificate_arn" {
-  description = "Regional certificate ARN to be used by the load balancer"
 }
 
 variable "service_desired_count" {
   description = "Number of services running in parallel"
 }
+variable "postgresql_instance_class" {
+  description = "PostgreSQL instance class to be used"
+}
+
+# variable "container_count" {
+#   description = "Number of docker container to run"
+# }
+
+# variable "container_cpu" {
+#   description = "The number of cpu units used by the task"
+# }
+
+# variable "container_memory" {
+#   description = "The amount (in MiB) of memory used by the task"
+# }
+
+# variable "container_image" {
+#   description = "Application container image"
+# }
+
+# variable "certificate_arn" {
+#   description = "Regional certificate ARN to be used by the load balancer"
+# }
 
 # variable "postgresql_version" {
 #   description = "PostgreSQL version to be used"
 # }
 
-variable "postgresql_instance_class" {
-  description = "PostgreSQL instance class to be used"
-}
-
-variable "tag" {
-  description = "tag to use for our new docker image"
-}
+# variable "tag" {
+#   description = "tag to use for our new docker image"
+# }
 
 # variable "domain_name" {
 #   description = "The domain name to access"

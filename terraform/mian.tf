@@ -35,7 +35,7 @@ module "security_groups" {
   name           = var.name
   vpc_id         = module.vpc.vpc_id
   environment    = var.environment
-  container_port = var.container_port
+  app_port = var.app_port
 }
 
 module "alb" {
@@ -46,7 +46,7 @@ module "alb" {
   environment         = var.environment
   security_groups     = [module.security_groups.alb]
   health_check_path   = var.health_check_path
-  container_port      = var.container_port
+  app_port            = var.app_port
 }
 
 module "rds" {

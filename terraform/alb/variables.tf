@@ -18,8 +18,8 @@ variable "security_groups" {
   description = "Comma separated list of security groups"
 }
 
-variable "container_port" {
-  description = "The port where the Docker is exposed"
+variable "app_port" {
+  description = "The port where the app is exposed"
 }
 
 variable "health_check_path" {

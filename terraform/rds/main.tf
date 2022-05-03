@@ -16,6 +16,11 @@ resource "aws_db_instance" "rds" {
   skip_final_snapshot       = true
 }
 
+output "rds_instance_address" {
+  description = "The adress of RDS instance"
+  value = aws_db_instance.rds.address
+}
+
 output "db_instance_availability_zone" {
   description = "The availability zone of the RDS instance"
   value = aws_db_instance.rds.availability_zone
