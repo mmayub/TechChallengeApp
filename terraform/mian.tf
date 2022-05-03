@@ -7,9 +7,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "malik-terraform-backend"
+    bucket = "malikk-terraform-backend"
     key = "terraform.tfstate"
     region = "ap-southeast-2"
+    # region = "us-east-1"
   }
 }
 
@@ -53,10 +54,36 @@ module "rds" {
   source                    = "./rds"
   name                      = var.name
   environment               = var.environment
-  master_username           = var.master_username
-  master_password           = var.master_password
+  db_username               = var.db_username
+  db_password               = var.db_password
   availability_zones        = var.availability_zones
   db_security_groups        = [module.security_groups.db]
   db_subnet_group_name      =  module.vpc.db_subnet_group_name
 }
 
+module "route53" {
+  source      = "./route53"
+  vpc_id      = module.vpc.vpc_id
+  rds_record_name     = module.rds.rds_instance_address
+}
+
+module "ecr" {
+  source      = "./ecr"
+  name        = var.name
+  environment = var.environment
+  tag         = var.tag
+}
+
+module "ecs" {
+  source = "./ecs"
+  container_cpu         = var.container_cpu
+  container_memory      = var.container_memory
+  container_port        = var.container_port
+  service_desired_count = var.service_desired_count
+  rds_endpoint          = module.route53.rds_record_name
+  db_password           = var.db_password
+  db_username           = var.db_username
+  db_listen_host        = var.db_listen_host
+  db_listen_port        = var.db_listen_port
+  db_user               = var.db_user
+}

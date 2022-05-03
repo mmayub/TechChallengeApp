@@ -55,11 +55,19 @@ variable "rds_endpoint" {
   description = "endpoint of rds cluster"
 }
 
-# variable "container_secrets" {
-#   description = "The container secret environmnent variables"
-#   type        = list
-# }
+variable "db_name" {
+  description = "Name of the DB"
+}
+variable "db_username" {
+  description = "username for db"
+}
+variable "db_password" {
+  description = "password for db"
+}
 
-# variable "container_secrets_arns" {
-#   description = "ARN for secrets"
-# }
+variable "db_listen_host" {
+  description = "host listening address"
+}
+variable "db_listen_port" {
+  description = "host listening port"
+}

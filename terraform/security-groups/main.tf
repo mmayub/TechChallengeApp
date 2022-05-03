@@ -18,7 +18,6 @@ resource "aws_security_group" "alb" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-
   tags = {
     Name        = "${var.name}-sg-alb-${var.environment}"
     Environment = var.environment
@@ -47,11 +46,6 @@ resource "aws_security_group" "app" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
   tags = {
     Name        = "${var.name}-sg-app-${var.environment}"
     Environment = var.environment
@@ -76,11 +70,6 @@ resource "aws_security_group" "db" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
   tags = {
     Name = "${var.name}-db-${var.environment}"
   }

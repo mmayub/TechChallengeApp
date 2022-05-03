@@ -6,11 +6,11 @@ variable "environment" {
   description = "the name of your environment, e.g. \"prod\""
 }
 
-variable "master_username" {
+variable "db_username" {
   description = "master username"
 }
 
-variable "master_password" {
+variable "db_password" {
   description = "master password"
 }
 

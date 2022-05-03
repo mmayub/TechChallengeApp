@@ -1,12 +1,13 @@
 resource "aws_db_instance" "rds" {
-  identifier                = "techchallengeservian-db-${var.environment}"
+  identifier                = "techchallenge-db-${var.environment}"
   allocated_storage         = 20
   max_allocated_storage     = 40
   engine                    = "postgres"
   engine_version            = "13.3"
   instance_class            = "db.t3.small"
-  username                  = "postgres"
-  password                  = "sEcure123"
+  name                      = "app"
+  username                  = var.db_username
+  password                  = var.db_password
   port                      = 5432
   publicly_accessible       = false
   vpc_security_group_ids    = var.db_security_groups

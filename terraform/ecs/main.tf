@@ -52,52 +52,53 @@ resource "aws_ecs_task_definition" "main" {
   cpu                      = var.container_cpu
   memory                   = var.container_memory
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  container_definitions = jsonencode(
-    [
-      {
-        name        = "${var.name}-container-${var.environment}"
-        # image       = var.container_image
-        image       = var.aws_ecr_repository_url
-        cpu         = var.container_cpu
-        memory      = var.container_memory
-        network_mode             = "awsvpc"
-        essential   = true
-        # environment = var.container_environment
-        command     = ["serve"]
-        portMappings = [
-          {
-            protocol      = "tcp"
-            containerPort = var.container_port
-            hostPort      = var.container_port
-          }
-        ]
-        logConfiguration = {
-          logDriver = "awslogs"
-          options = {
-            awslogs-group         = aws_cloudwatch_log_group.main.name
-            awslogs-stream-prefix = "ecs"
-            awslogs-region        = var.region
-          }
-        },
-        command = ["server"],
-        # environment = [
-        #   {
-        #   name  = "VTT_DBHOST"
-        #   value = var.rds_endpoint
-        #   },
-        #   {
-        #     name  = "VTT_DBPASSWORD"
-        #     value = var.master_password
-        #   },
-        #   {
-        #     name  = "VTT_LISTENHOST"
-        #     value = "0.0.0.0"
-        #   }
-        # ]
+  container_definitions = jsonencode([
+    {
+      name        = "${var.name}-container-${var.environment}"
+      image       = var.aws_ecr_repository_url
+      essential   = true
+      cpu         = var.container_cpu
+      memory      = var.container_memory
+      command     = ["serve"]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.main.name
+          awslogs-stream-prefix = "ecs"
+          awslogs-region        = var.region
+        }
       }
-    ]
-  )
-
+      portMappings = [
+        {
+          protocol      = "tcp"
+          containerPort = var.container_port
+          hostPort      = var.container_port
+        }
+      ]
+      environment = [
+        {
+        name  = "VTT_DBUSER"
+        value = var.db_name
+        },
+        {
+        name  = "VTT_DBHOST"
+        value = var.rds_endpoint
+        },
+        {
+          name  = "VTT_DBPASSWORD"
+          value = var.db_password
+        },
+        {
+          name  = "VTT_LISTENHOST"
+          value = var.db_listen_host
+        },
+        {
+          name  = "VTT_LISTENPORT"
+          value = var.db_listen_port
+        },
+      ]
+    }
+  ])
   tags = {
     Name        = "${var.name}-task-${var.environment}"
     Environment = var.environment
@@ -109,24 +110,24 @@ resource "aws_ecs_service" "main" {
   name                               = "${var.name}-service-${var.environment}"
   cluster                            = aws_ecs_cluster.main.id
   task_definition                    = aws_ecs_task_definition.main.arn
-  desired_count                      = var.service_desired_count
-  # deployment_minimum_healthy_percent = 50
-  # deployment_maximum_percent         = 200
-  # health_check_grace_period_seconds  = 60
+  service_desired_count              = var.service_desired_count
   launch_type                        = "FARGATE"
-  # scheduling_strategy                = "REPLICA"
-
-  network_configuration {
-    security_groups  = var.ecs_service_security_groups
-    subnets          = var.subnets.*.id
-    assign_public_ip = true
-  }
 
   load_balancer {
     target_group_arn = var.aws_alb_target_group_arn
     container_name   = "${var.name}-container-${var.environment}"
     container_port   = var.container_port
   }
+
+  network_configuration {
+    security_groups  = var.ecs_service_security_groups
+    subnets          = var.subnets.*.id
+    assign_public_ip = true
+  }
+  # deployment_minimum_healthy_percent = 50
+  # deployment_maximum_percent         = 200
+  # health_check_grace_period_seconds  = 60  
+  # scheduling_strategy                = "REPLICA"
 
   # we ignore task_definition changes as the revision changes on deploy
   # of a new version of the application
@@ -136,111 +137,111 @@ resource "aws_ecs_service" "main" {
   }
 }
 
-# autoscaling
-resource "aws_iam_role" "autoscale_role" {
-  name = "fargate-autoscale-role"
-  assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = {
-          Service = "application-autoscaling.amazonaws.com"
-        }
-        Action    = "sts:AssumeRole"
-      }
-    ]
-  })
-}
+# # autoscaling
+# resource "aws_iam_role" "autoscale_role" {
+#   name = "fargate-autoscale-role"
+#   assume_role_policy = jsonencode({
+#     Version   = "2012-10-17"
+#     Statement = [
+#       {
+#         Effect    = "Allow"
+#         Principal = {
+#           Service = "application-autoscaling.amazonaws.com"
+#         }
+#         Action    = "sts:AssumeRole"
+#       }
+#     ]
+#   })
+# }
 
-resource "aws_appautoscaling_target" "ecs_target" {
-  max_capacity       = 6
-  min_capacity       = 3
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
-  role_arn           = aws_iam_role.autoscale_role.arn
-  service_namespace  = "ecs"
-}
+# resource "aws_appautoscaling_target" "ecs_target" {
+#   max_capacity       = 6
+#   min_capacity       = 3
+#   resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
+#   scalable_dimension = "ecs:service:DesiredCount"
+#   role_arn           = aws_iam_role.autoscale_role.arn
+#   service_namespace  = "ecs"
+# }
 
-# Automatically scale capacity up by one
-resource "aws_appautoscaling_policy" "up" {
-  name               = "${var.name}-scale-up-${var.environment}"
-  service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
+# # Automatically scale capacity up by one
+# resource "aws_appautoscaling_policy" "up" {
+#   name               = "${var.name}-scale-up-${var.environment}"
+#   service_namespace  = "ecs"
+#   resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
+#   scalable_dimension = "ecs:service:DesiredCount"
 
-  step_scaling_policy_configuration {
-    adjustment_type         = "ChangeInCapacity"
-    cooldown                = 60
-    metric_aggregation_type = "Maximum"
+#   step_scaling_policy_configuration {
+#     adjustment_type         = "ChangeInCapacity"
+#     cooldown                = 60
+#     metric_aggregation_type = "Maximum"
 
-    step_adjustment {
-      metric_interval_lower_bound = 0
-      scaling_adjustment          = 1
-    }
-  }
+#     step_adjustment {
+#       metric_interval_lower_bound = 0
+#       scaling_adjustment          = 1
+#     }
+#   }
 
-  depends_on = [aws_appautoscaling_target.ecs_target]
-}
+#   depends_on = [aws_appautoscaling_target.ecs_target]
+# }
 
-# Automatically scale capacity down by one
-resource "aws_appautoscaling_policy" "down" {
-  name               = "${var.name}-scale-down-${var.environment}"
-  service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
-  scalable_dimension = "ecs:service:DesiredCount"
+# # Automatically scale capacity down by one
+# resource "aws_appautoscaling_policy" "down" {
+#   name               = "${var.name}-scale-down-${var.environment}"
+#   service_namespace  = "ecs"
+#   resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
+#   scalable_dimension = "ecs:service:DesiredCount"
 
-  step_scaling_policy_configuration {
-    adjustment_type         = "ChangeInCapacity"
-    cooldown                = 60
-    metric_aggregation_type = "Maximum"
+#   step_scaling_policy_configuration {
+#     adjustment_type         = "ChangeInCapacity"
+#     cooldown                = 60
+#     metric_aggregation_type = "Maximum"
 
-    step_adjustment {
-      metric_interval_lower_bound = 0
-      scaling_adjustment          = -1
-    }
-  }
+#     step_adjustment {
+#       metric_interval_lower_bound = 0
+#       scaling_adjustment          = -1
+#     }
+#   }
 
-  depends_on = [aws_appautoscaling_target.ecs_target]
-}
+#   depends_on = [aws_appautoscaling_target.ecs_target]
+# }
 
-# CloudWatch alarm that triggers the autoscaling up policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-  alarm_name          = "${var.name}-${var.environment}-cpu-utilization-high"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = "60"
-  statistic           = "Average"
-  threshold           = "85"
+# # CloudWatch alarm that triggers the autoscaling up policy
+# resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
+#   alarm_name          = "${var.name}-${var.environment}-cpu-utilization-high"
+#   comparison_operator = "GreaterThanOrEqualToThreshold"
+#   evaluation_periods  = "2"
+#   metric_name         = "CPUUtilization"
+#   namespace           = "AWS/ECS"
+#   period              = "60"
+#   statistic           = "Average"
+#   threshold           = "85"
 
-  dimensions = {
-    ClusterName = aws_ecs_cluster.main.name
-    ServiceName = aws_ecs_service.main.name
-  }
+#   dimensions = {
+#     ClusterName = aws_ecs_cluster.main.name
+#     ServiceName = aws_ecs_service.main.name
+#   }
 
-  alarm_actions = [aws_appautoscaling_policy.up.arn]
-}
+#   alarm_actions = [aws_appautoscaling_policy.up.arn]
+# }
 
-# CloudWatch alarm that triggers the autoscaling down policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
-  alarm_name          = "${var.name}-${var.environment}-cpu-utilization-low"
-  comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = "60"
-  statistic           = "Average"
-  threshold           = "10"
+# # CloudWatch alarm that triggers the autoscaling down policy
+# resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
+#   alarm_name          = "${var.name}-${var.environment}-cpu-utilization-low"
+#   comparison_operator = "LessThanOrEqualToThreshold"
+#   evaluation_periods  = "2"
+#   metric_name         = "CPUUtilization"
+#   namespace           = "AWS/ECS"
+#   period              = "60"
+#   statistic           = "Average"
+#   threshold           = "10"
 
-  dimensions = {
-    ClusterName = aws_ecs_cluster.main.name
-    ServiceName = aws_ecs_service.main.name
-  }
+#   dimensions = {
+#     ClusterName = aws_ecs_cluster.main.name
+#     ServiceName = aws_ecs_service.main.name
+#   }
 
-  alarm_actions = [aws_appautoscaling_policy.down.arn]
-}
+#   alarm_actions = [aws_appautoscaling_policy.down.arn]
+# }
 
 
 # # based on memory usage

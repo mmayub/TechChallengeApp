@@ -65,6 +65,18 @@ variable "health_check_path" {
   description = "Http path for task health check"
 }
 
+variable "container_cpu" {
+  description = "The number of cpu units used by the task"
+}
+
+variable "container_memory" {
+  description = "The amount (in MiB) of memory used by the task"
+}
+
+variable "container_port" {
+  description = "Port of container"
+}
+
 variable "service_desired_count" {
   description = "Number of services running in parallel"
 }
@@ -74,14 +86,6 @@ variable "postgresql_instance_class" {
 
 # variable "container_count" {
 #   description = "Number of docker container to run"
-# }
-
-# variable "container_cpu" {
-#   description = "The number of cpu units used by the task"
-# }
-
-# variable "container_memory" {
-#   description = "The amount (in MiB) of memory used by the task"
 # }
 
 # variable "container_image" {
@@ -96,10 +100,31 @@ variable "postgresql_instance_class" {
 #   description = "PostgreSQL version to be used"
 # }
 
-# variable "tag" {
-#   description = "tag to use for our new docker image"
-# }
+variable "rds_endpoint" {
+  description = "rds record name"
+}
+variable "tag" {
+  description = "tag to use for our new docker image"
+}
 
+
+variable "db_name" {
+  description = "Name of the DB"
+}
+variable "db_username" {
+  description = "master username"
+}
+
+variable "db_password" {
+  description = "master password"
+}
+
+variable "db_listen_host" {
+  description = "host listening address"
+}
+variable "db_listen_port" {
+  description = "host listening port"
+}
 # variable "domain_name" {
 #   description = "The domain name to access"
 # }
