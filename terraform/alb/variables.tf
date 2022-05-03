@@ -14,8 +14,8 @@ variable "vpc_id" {
   description = "VPC ID"
 }
 
-variable "security_groups" {
-  description = "Comma separated list of security groups"
+variable "alb_security_group" {
+  description = "security group for ALB"
 }
 
 variable "app_port" {

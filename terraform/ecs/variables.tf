@@ -14,12 +14,12 @@ variable "subnets" {
   description = "List of subnet IDs"
 }
 
-variable "ecs_service_security_groups" {
-  description = "Comma separated list of security groups"
+variable "app_security_group" {
+  description = "security group to be used by the app"
 }
 
-variable "container_port" {
-  description = "Port of container"
+variable "app_port" {
+  description = "Port of container app"
 }
 
 variable "container_cpu" {
@@ -30,10 +30,6 @@ variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
 }
 
-# variable "container_image" {
-#   description = "Docker image to be launched"
-# }
-
 variable "aws_alb_target_group_arn" {
   description = "ARN of the alb target group"
 }
@@ -42,17 +38,21 @@ variable "aws_ecr_repository_url" {
   description = "URL to ECR where app image is stored"
 }
 
-variable "service_desired_count" {
+variable "app_count" {
   description = "Number of services running in parallel"
 }
 
-variable "container_environment" {
-  description = "The container environmnent variables"
-  type        = list
-}
+# variable "container_environment" {
+#   description = "The container environmnent variables"
+#   type        = list
+# }
 
-variable "rds_endpoint" {
-  description = "endpoint of rds cluster"
+# variable "db_instance_address" {
+#   description = "address of rds instance"
+# }
+
+variable "db_record_name" {
+  description = "route53 record name of rds instance"
 }
 
 variable "db_name" {

@@ -15,9 +15,13 @@ resource "aws_db_instance" "rds" {
   parameter_group_name      = "default.postgres13"
   multi_az                  = true
   skip_final_snapshot       = true
+
+  tags = {
+    Name = "${var.name}-db-${var.environment}"
+  }
 }
 
-output "rds_instance_address" {
+output "db_instance_address" {
   description = "The adress of RDS instance"
   value = aws_db_instance.rds.address
 }

@@ -41,6 +41,10 @@ resource "aws_db_subnet_group" "db-subnet-group" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    aws_subnet.private
+  ]
 }
 
 # add public subnets
@@ -196,6 +200,14 @@ data "aws_subnets" "available" {
 output "vpc_id" {
   description = "ID of project VPC"
   value = aws_vpc.main.id
+}
+
+output "private_subnet_ids" {
+  value = aws_subnet.private.*.id
+}
+
+output "public_subnet_ids" {
+  value = aws_subnet.public.*.id
 }
 
 output "public_subnets" {

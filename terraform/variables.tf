@@ -11,34 +11,12 @@ variable "aws-region" {
   description = "AWS region where infrasturcture is launched"
 }
 
-# variable "ecs_task_execution_role_name" {
-#   description = "ECS task execution role name" 
-# }
-
-# variable "ecs_auto_scale_role_name" {
-#   description = "ECS auto scale role Name"
-# }
-
 variable "aws-access-key" {
   type = string
   sensitive = true
 }
 
 variable "aws-secret-key" {
-  type = string
-  sensitive = true
-}
-
-# variable "az_count" {
-#   description = "Number of AZs to cover in a given region"
-# }
-
-variable "master_username" {
-  type = string
-  sensitive = true
-}
-
-variable "master_password" {
   type = string
   sensitive = true
 }
@@ -58,6 +36,7 @@ variable "private_subnets" {
 variable "public_subnets" {
   description = "a list of CIDRs for public subnets in your VPC, must be set if the cidr variable is defined, needs to have as many elements as there are availability zones" 
 }
+
 variable "app_port" {
   description = "The port where the app is exposed"
 }
@@ -69,27 +48,50 @@ variable "container_cpu" {
   description = "The number of cpu units used by the task"
 }
 
+# variable "aws_ecr_repository_url" {
+#   description = "URL to ECR repository"
+# }
+
 variable "container_memory" {
   description = "The amount (in MiB) of memory used by the task"
 }
 
-variable "container_port" {
-  description = "Port of container"
+variable "app_count" {
+  description = "Number of apps running in parallel"
 }
 
-variable "service_desired_count" {
-  description = "Number of services running in parallel"
-}
-variable "postgresql_instance_class" {
-  description = "PostgreSQL instance class to be used"
+variable "tag" {
+  description = "tag to use for our new docker image"
 }
 
-# variable "container_count" {
-#   description = "Number of docker container to run"
+variable "db_name" {
+  description = "Name of the DB"
+}
+
+variable "db_username" {
+  description = "master username"
+  sensitive = true
+}
+
+variable "db_password" {
+  description = "master password"
+  sensitive = true
+}
+
+variable "db_listen_host" {
+  description = "host listening address"
+}
+
+variable "db_listen_port" {
+  description = "host listening port"
+}
+
+# variable "app_security_group" {
+#   description = "security group for app"
 # }
 
-# variable "container_image" {
-#   description = "Application container image"
+# variable "db_security_group" {
+#   description = "security group for DB"
 # }
 
 # variable "certificate_arn" {
@@ -100,31 +102,18 @@ variable "postgresql_instance_class" {
 #   description = "PostgreSQL version to be used"
 # }
 
-variable "rds_endpoint" {
-  description = "rds record name"
-}
-variable "tag" {
-  description = "tag to use for our new docker image"
-}
+# variable "db_instance_address" {
+#   description = "address of rds instance"
+# }
 
+# variable "db_record_name" {
+#   description = "route53 record name of rds instance"
+# }
 
-variable "db_name" {
-  description = "Name of the DB"
-}
-variable "db_username" {
-  description = "master username"
-}
+# variable "ecs_task_execution_role_name" {
+#   description = "ECS task execution role name" 
+# }
 
-variable "db_password" {
-  description = "master password"
-}
-
-variable "db_listen_host" {
-  description = "host listening address"
-}
-variable "db_listen_port" {
-  description = "host listening port"
-}
-# variable "domain_name" {
-#   description = "The domain name to access"
+# variable "ecs_auto_scale_role_name" {
+#   description = "ECS auto scale role Name"
 # }

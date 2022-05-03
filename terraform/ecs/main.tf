@@ -71,22 +71,30 @@ resource "aws_ecs_task_definition" "main" {
       portMappings = [
         {
           protocol      = "tcp"
-          containerPort = var.container_port
-          hostPort      = var.container_port
+          containerPort = var.app_port
+          hostPort      = var.app_port
         }
       ]
       environment = [
         {
         name  = "VTT_DBUSER"
-        value = var.db_name
-        },
-        {
-        name  = "VTT_DBHOST"
-        value = var.rds_endpoint
+        value = "postgres"
         },
         {
           name  = "VTT_DBPASSWORD"
           value = var.db_password
+        },
+        {
+        name  = "VTT_DBNAME"
+        value = var.db_name
+        },
+        {
+        name  = "VTT_DBPORT"
+        value = "5432"
+        },
+        {
+        name  = "VTT_DBHOST"
+        value = var.db_record_name
         },
         {
           name  = "VTT_LISTENHOST"
@@ -110,18 +118,18 @@ resource "aws_ecs_service" "main" {
   name                               = "${var.name}-service-${var.environment}"
   cluster                            = aws_ecs_cluster.main.id
   task_definition                    = aws_ecs_task_definition.main.arn
-  service_desired_count              = var.service_desired_count
+  desired_count                      = var.app_count
   launch_type                        = "FARGATE"
 
   load_balancer {
     target_group_arn = var.aws_alb_target_group_arn
     container_name   = "${var.name}-container-${var.environment}"
-    container_port   = var.container_port
+    container_port   = var.app_port
   }
 
   network_configuration {
-    security_groups  = var.ecs_service_security_groups
-    subnets          = var.subnets.*.id
+    security_groups  = [var.app_security_group]
+    subnets          = var.subnets
     assign_public_ip = true
   }
   # deployment_minimum_healthy_percent = 50

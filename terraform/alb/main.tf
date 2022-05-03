@@ -1,9 +1,8 @@
 resource "aws_lb" "main" {
   name               = "${var.name}-alb-${var.environment}"
   internal           = false
-  security_groups    = var.security_groups
+  security_groups    = [var.alb_security_group]
   subnets            = var.subnets.*.id
-
   enable_deletion_protection = false
   
   tags = {
@@ -29,7 +28,8 @@ resource "aws_alb_target_group" "main" {
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"
+  # target_type = "ip"
+  # target_type = ""
 
   health_check {
     healthy_threshold   = "3"
