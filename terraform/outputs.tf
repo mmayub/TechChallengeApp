@@ -23,10 +23,11 @@ output "app_security_group" {
 }
 
 output "db_subnet_group_name" {
-  value = module.vpc.db_subnet_group_name
+  value = module.rds.db_subnet_group_name
 }
-output "account_id" {
-  value = data.aws_caller_identity.current.account_id
+
+output "subnet_ids" {
+  value = data.aws_subnets.available
 }
 output "db_instance_availability_zone" {
   value       = module.rds.db_instance_availability_zone

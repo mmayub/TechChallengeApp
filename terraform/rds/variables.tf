@@ -22,6 +22,6 @@ variable "db_security_groups" {
   description = "ID for db security groups"
 }
 
-variable "db_subnet_group_name" {
+variable "db_subnets" {
   description = "db subnet group id"
 }

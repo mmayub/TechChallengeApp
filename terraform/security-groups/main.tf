@@ -26,7 +26,7 @@ resource "aws_security_group" "alb" {
 
 # security group for app
 resource "aws_security_group" "app" {
-  name   = "${var.name}-sg-task-${var.environment}"
+  name   = "${var.name}-sg-app-${var.environment}"
   vpc_id = var.vpc_id
 
   ingress {

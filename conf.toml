@@ -6,12 +6,3 @@
 "DbHost" = "apprds.aws.techchallenge.com"
 "ListenHost" = "0.0.0.0"
 "ListenPort" = "3000"
-
-
-#"DbUser" = "postgres"
-#"DbPassword" = "sEcure123"
-#"DbName" = "app"
-#"DbPort" = "5432"
-#"DbHost" = "apprds.aws.techchallenge.com"
-#"ListenHost" = "0.0.0.0"
-#"ListenPort" = "3000"

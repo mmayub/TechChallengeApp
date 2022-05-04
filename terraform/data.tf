@@ -7,9 +7,9 @@ data "aws_subnets" "available" {
   }
 }
 
-data "aws_vpc" "selected" {
-  tags = {
-    Name = "${var.name}-vpc-${var.environment}"
-  }
-}
+# data "aws_vpc" "selected" {
+#   tags = {
+#     Name = "${var.name}-vpc-${var.environment}"
+#   }
+# }
 

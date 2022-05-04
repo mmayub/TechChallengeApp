@@ -32,21 +32,6 @@ resource "aws_subnet" "private" {
   }
 }
 
-# db subnet group
-resource "aws_db_subnet_group" "db-subnet-group" {
-  name       = "techchallangeapp-rds-subnet-group"
-  subnet_ids = data.aws_subnets.available.ids
-  description = "techchallangeapp rds subnet group"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [
-    aws_subnet.private
-  ]
-}
-
 # add public subnets
 resource "aws_subnet" "public" {
   vpc_id            = aws_vpc.main.id
@@ -218,9 +203,4 @@ output "public_subnets" {
 output "private_subnets" {
   description = "private subnets"
   value = aws_subnet.private
-}
-
-output "db_subnet_group_name" {
-  description = "db subnet group id"
-  value = aws_db_subnet_group.db-subnet-group.id
 }

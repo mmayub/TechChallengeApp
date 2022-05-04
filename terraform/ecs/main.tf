@@ -78,7 +78,7 @@ resource "aws_ecs_task_definition" "main" {
       environment = [
         {
         name  = "VTT_DBUSER"
-        value = "postgres"
+        value = "app"
         },
         {
           name  = "VTT_DBPASSWORD"

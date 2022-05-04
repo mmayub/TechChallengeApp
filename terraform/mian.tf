@@ -58,7 +58,7 @@ module "rds" {
   db_password               = var.db_password
   availability_zones        = var.availability_zones
   db_security_groups        = [module.security_groups.db]
-  db_subnet_group_name      =  module.vpc.db_subnet_group_name
+  db_subnets                = module.vpc.private_subnet_ids
 }
 
 module "route53" {
@@ -67,12 +67,12 @@ module "route53" {
   db_instance_address     = module.rds.db_instance_address
 }
 
-module "ecr" {
-  source      = "./ecr"
-  name        = var.name
-  environment = var.environment
-  tag         = var.tag
-}
+# module "ecr" {
+#   source      = "./ecr"
+#   name        = var.name
+#   environment = var.environment
+#   tag         = var.tag
+# }
 
 module "ec2" {
   source = "./ec2"

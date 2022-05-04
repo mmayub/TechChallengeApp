@@ -31,4 +31,3 @@ EOF
 
 # start app
 cd $APP_BASE/dist/ && sudo ./TechChallengeApp serve
-
