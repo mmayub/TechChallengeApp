@@ -1,6 +1,6 @@
-"DbUser" = "postgres"
+"DbUser" = "malik"
 "DbPassword"="sEcure123"
-"DbUsername" = "app"
+"DbName"="app"
 "DbPort" = "5432"
 "DbHost" = "apprds.aws.techchallenge.com"
 "ListenHost" = "0.0.0.0"

@@ -64,9 +64,9 @@ variable "tag" {
   description = "tag to use for our new docker image"
 }
 
-variable "db_name" {
-  description = "Name of the DB"
-}
+# variable "db_name" {
+#   description = "Name of the DB"
+# }
 
 variable "db_username" {
   description = "master username"
