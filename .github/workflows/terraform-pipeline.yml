@@ -1,0 +1,34 @@
+name: Infrastructure Terraform Plan
+on:
+  push:
+    paths:
+    - 'terraform/**'
+    branches:
+    - master
+  pull_request:
+    paths:
+    - 'terraform/**'
+    branches:
+    - master
+jobs:
+  plan:
+    name: "Terraform pipeline"
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_AWS_SECRET: ${{ secrets.AWS_SECRET_KEY_ID }}
+      BASE_PATH: $ {{ }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Terraform init
+        id: init
+        run: terraform init
+
+      - name: Terraform plan
+        id: plan
+        run: . tplan.sh
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: . tapply.sh
