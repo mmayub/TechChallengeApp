@@ -16,7 +16,7 @@ resource "aws_db_instance" "rds" {
   engine                    = "postgres"
   engine_version            = "13.3"
   instance_class            = "db.t3.small"
-  name                      = "app"
+  # name                      = "app"
   username                  = var.db_username
   password                  = var.db_password
   port                      = 5432
