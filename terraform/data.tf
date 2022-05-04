@@ -6,10 +6,3 @@ data "aws_subnets" "available" {
     values = ["*private-subnet*"]
   }
 }
-
-# data "aws_vpc" "selected" {
-#   tags = {
-#     Name = "${var.name}-vpc-${var.environment}"
-#   }
-# }
-

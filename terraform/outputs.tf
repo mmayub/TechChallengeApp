@@ -6,10 +6,6 @@ output "aws_alb_target_group_arn" {
   value = module.alb.aws_alb_target_group_arn
 }
 
-# output "aws_ecr_repository_url" {
-#     value = module.ecr.main.repository_url
-# }
-
 output "alb_security_group" {
   value = module.security_groups.alb
 }
@@ -47,12 +43,3 @@ output "private_subnet_ids" {
 output "public_subnet_ids" {
   value = module.vpc.public_subnet_ids
 }
-
-# output "db_record" {
-#   value = module.route53.db_record
-# }
-
-# output "rds" {
-#   value = module.rds.rds
-# }
-

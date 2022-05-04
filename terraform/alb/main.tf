@@ -2,7 +2,8 @@ resource "aws_lb" "main" {
   name               = "${var.name}-alb-${var.environment}"
   internal           = false
   security_groups    = [var.alb_security_group]
-  subnets            = var.subnets.*.id
+  # subnets            = var.subnets.*.id
+  subnets            = var.subnets  
   enable_deletion_protection = false
   
   tags = {
