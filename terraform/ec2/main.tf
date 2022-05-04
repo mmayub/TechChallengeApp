@@ -27,7 +27,6 @@ resource "aws_launch_configuration" "launch-configuration" {
     name_prefix   = "techchallengeapp-launch-configuration"
     image_id      = data.aws_ami.amazon-linux-2.id
     instance_type = "t2.micro"
-    # user_data     = filebase64("install.sh")
     user_data     = file("${path.module}/install.sh") 
     security_groups= [var.app_security_group]
     key_name      = "${var.name}-key" 
@@ -39,10 +38,6 @@ resource "aws_launch_configuration" "launch-configuration" {
     lifecycle {
         create_before_destroy = true
     }
-
-    # depends_on = [
-    #   aws_key_pair.deploy_key
-    # ]
 }
 
 resource "aws_autoscaling_group" "autoscaling-group" {

@@ -17,12 +17,3 @@ variable "name" {
 variable "environment" {
   description = "the name of your environment, e.g. \"prod\""
 }
-
-
-# variable "db_record" {
-#   description = "private db record resource"
-# }
-
-# variable "rds" {
-#   description = "db resource"
-# }

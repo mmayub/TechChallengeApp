@@ -37,7 +37,6 @@ variable "source_path" {
 resource "null_resource" "push" {
   provisioner "local-exec" {
     command     = "./${coalesce("push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.main.repository_url} ${var.tag} ${data.aws_caller_identity.current.account_id}"
-    # command     = "./${coalesce("push.sh", "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.main.repository_url} ${var.tag} ${var.account_id}"
     interpreter = ["bash", "-c"]
   }
 }

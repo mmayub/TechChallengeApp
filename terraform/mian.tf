@@ -71,6 +71,6 @@ module "ec2" {
   name                      = var.name
   environment               = var.environment
   app_security_group        = module.security_groups.app
-  vpc_zone_identifier       = module.vpc.public_subnet_ids
+  vpc_zone_identifier       = module.vpc.private_subnet_ids
   aws_alb_target_group_arn  = module.alb.aws_alb_target_group_arn
 }

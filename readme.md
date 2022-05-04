@@ -75,7 +75,7 @@ With all variables configured, you can run the following Terraform scripts from 
 `. tapply.sh`
 	    This will apply the `terraform.plan` file created in the previous step to deploy resources to your AWS account and create the `terraform.tfstate` file in your previously manually created S3 bucket.
 	
-        After the creation, it will return some outputs with the information of the resources created in the cloud. Make sure use `alb_dns_name` in the browser to check the application
+- After the creation, it will return some outputs with the information of the resources created in the cloud. Make sure use `alb_dns_name` in the browser to check the application
 
 ### Delete the stack
 
