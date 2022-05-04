@@ -54,9 +54,4 @@ resource "aws_autoscaling_group" "autoscaling-group" {
         value               = "${var.name}-${var.environment}"
         propagate_at_launch = true
     }
-
-    # depends_on = [
-    #     aws_db_instance.rds,
-    #     aws_route53_record.private-db-record
-    # ]
 }

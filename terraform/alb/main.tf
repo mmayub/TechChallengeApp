@@ -29,8 +29,6 @@ resource "aws_alb_target_group" "main" {
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  # target_type = "ip"
-  # target_type = ""
 
   health_check {
     healthy_threshold   = "3"

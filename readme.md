@@ -23,7 +23,7 @@ The deployment will create 2 types of subnets (private and public) across all 3 
 The virtual machines are scaled in using an auto scale group and the [install.sh](terraform/install.sh) script runs the initial setup of the server when instances are spin up.
 
 
-![techChallenge.drawio.png](techChallenge.drawio.png)
+![techChallenge.png](techChallenge.drawio.png)
 
 *The above diagram represents a high available solution (tasks and database deployed in multiple subnets). For demonstration and learning purposes, the implementation is fixed to deploy a single replica for the database*
 
